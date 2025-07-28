@@ -5,14 +5,16 @@
   <div align="center"></div>
 </p>
 
-![](assets/teaser_github.pdf "Neural Shape-from-Template teaser")
+![](assets/nsft_teaser.jpeg "Neural Shape-from-Template teaser")
 
 # Abstract
 Shape-from-Template problem aims to reconstruct 3D object given a template.
 This repository provides a framework NSfT optimizing shapes using neural networks implemented in PyTorch.
 The overall pipeline is shown in the figure below.
 
-![](assets/pipeline.pdf "Neural Shape-from-Template pipeline")
+![](assets/nsft_pipeline.jpeg "Neural Shape-from-Template pipeline")
+
+The object masks can be estimated using [SAM 2](https://github.com/facebookresearch/segment-anything).
 
 # Installation
 To install the dependencies, run the following command:
