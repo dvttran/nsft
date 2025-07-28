@@ -1,0 +1,19 @@
+dataset:
+  name: sft
+  root_dir: datasets
+  dataset_name: Phi_SfT
+  sequence_type: real
+  sequence_name: S1  # S1, S2, S3, S4, S5, S6, S7, S8, S9
+  rgb_dir: rgbs
+  sil_dir: blurred_masks
+  gt_point_cloud_dir: point_clouds
+  render:
+    name: pytorch3d  # pytorch3d, nvdiffrast
+    camera_type: perspective
+    camera_file: camera.json
+    background_color: black
+    kinect: True
+  template:
+    name: PyTorch3DTexturedMesh
+    template_file: templates/template_mesh_final_textured.obj
+    texture_file: templates/template_mesh_final_textured.png

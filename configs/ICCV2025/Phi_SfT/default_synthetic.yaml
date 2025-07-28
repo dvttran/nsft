@@ -1,0 +1,108 @@
+default:
+  runner:
+    name: markov
+    n_epochs_warmup: 500
+    n_epochs_per_frame: 200
+    log_every: 100
+    seed: 7
+    device: cuda
+
+    dataset:
+      name: sft
+      root_dir: datasets
+      dataset_name: Phi_SfT
+      sequence_type: synthetic  # synthetic, real
+      sequence_name: S1  # S1, S2, S3, S4, S5, S6, S7, S8, S9
+      rgb_dir: rgbs
+      sil_dir: blurred_masks
+      gt_mesh_dir: surfaces
+      trajectory_type: decoupled
+      render:
+        name: pytorch3d  # pytorch3d, nvdiffrast
+        camera_type: fov_perspective  # perspective, fov_perspective
+        camera_file: camera.json
+        background_color: white  # white, black
+        light_position: [ [ 0.0, 0.0, -3.0 ] ]
+      template:
+        name: Pytorch3DTexturedMesh
+        template_file: surfaces/0000_00.obj  # surfaces/0000_00.obj, templates/template_mesh_final_textured.obj
+        texture_file: texture.jpg  # texture.jpg, templates/template_mesh_final_textured.png
+
+    model:
+      name: DeformMLP
+      config_path: configs/ICCV2025/models/default_mlp.yaml
+
+    optimizer:
+      name: adamw
+      lr: !!float 1e-4
+      weight_decay: !!float 1e-2
+
+    losses:
+      - name: rgb
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      - name: sil
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      - name: mesh_inextensibility
+        weight: !!float 1e7
+#      - name: adaptive_mesh_inextensibility
+#        weight: !!float 1.0
+#        hyperparams:
+#          q: 0.5
+      - name: image_derivative
+        weight: !!float 1.0
+        orders: [ 1, 2 ]
+        kernel: "sobel"
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+
+    metrics:
+      - name: lp
+        hyperparams:
+          p: 2
+          mode: rel
+          reduce: none
+        weight: 1.0
+
+local:
+  runner:
+    device: cpu
+    dataset:
+      sequence_name: S2
+      render:
+        name: pytorch3d
+
+S1:
+  runner:
+    dataset:
+      sequence_name: S1
+
+S2:
+  runner:
+    dataset:
+      sequence_name: S2
+
+S3:
+  runner:
+    dataset:
+      sequence_name: S3
+
+S4:
+  runner:
+    dataset:
+      sequence_name: S4

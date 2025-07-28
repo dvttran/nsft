@@ -1,0 +1,130 @@
+default:
+  runner:
+    name: markov
+    n_epochs_warmup: 500
+    n_epochs_per_frame: 200
+    log_every: 100
+    seed: 7
+    device: cuda
+
+    dataset:
+      name: sft
+      root_dir: datasets
+      dataset_name: Phi_SfT
+      sequence_type: real
+      sequence_name: S1
+      rgb_dir: rgbs
+      sil_dir: blurred_masks
+      gt_point_cloud_dir: point_clouds
+      trajectory_type: decoupled
+      render:
+        name: nvdiffrast  # pytorch3d, nvdiffrast
+        camera_type: perspective
+        camera_file: camera.json
+        background_color: black
+        kinect: True
+      template:
+        name: PyTorch3DTexturedMesh
+        template_file: templates/template_mesh_final_textured.obj
+        texture_file: templates/template_mesh_final_textured.png
+
+    model:
+      name: DeformMLP
+      config_path: configs/ICCV2025/models/small_mlp.yaml
+
+    optimizer:
+      name: adamw
+      lr: !!float 1e-4
+      weight_decay: !!float 1e-2
+
+    losses:
+      - name: rgb
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      - name: sil
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      - name: adaptive_mesh_inextensibility
+        weight: !!float 1.0
+        hyperparams:
+          q: 0.5
+      - name: image_derivative
+        weight: !!float 1.0
+        orders: [ 1, 2 ]
+        kernel: "sobel"
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+
+    metrics:
+      - name: chamfer
+        hyperparams:
+          seed: 12
+          scale: !!float 1e4
+        weight: 1.0
+
+local:
+  runner:
+    device: cpu
+    dataset:
+      sequence_name: S9
+      render:
+        name: pytorch3d
+
+R1:
+  runner:
+    dataset:
+      sequence_name: S1
+
+R2:
+  runner:
+    dataset:
+      sequence_name: S2
+
+R3:
+  runner:
+    dataset:
+      sequence_name: S3
+
+R4:
+  runner:
+    dataset:
+      sequence_name: S4
+
+R5:
+  runner:
+    dataset:
+      sequence_name: S5
+
+R6:
+  runner:
+    dataset:
+      sequence_name: S6
+
+R7:
+  runner:
+    dataset:
+      sequence_name: S7
+
+R8:
+  runner:
+    dataset:
+      sequence_name: S8
+
+R9:
+  runner:
+    dataset:
+      sequence_name: S9

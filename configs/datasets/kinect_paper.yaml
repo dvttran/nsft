@@ -1,0 +1,25 @@
+dataset:
+  name: sft
+  root_dir: datasets
+  dataset_name: KINECT_PAPER
+  sequence_type: ""
+  sequence_name: ""
+  rgb_dir: rgbs
+  sil_dir: blurred_masks
+  mask_dir: gt_masks
+  gt_kinect_data_dir: gt_kinect_data
+  point_cloud_ext: .obj
+  render:
+    name: nvdiffrast  # pytorch3d, nvdiffrast
+    camera_type: perspective
+    camera_dir: other_data/camera_params
+    background_color: black
+    image_size:
+      width: 640
+      height: 480
+    kinect: True
+  template:
+    name: UntexturedMesh
+    vertex_file: other_data/mesh.pts
+    face_file: other_data/mesh.tri
+    texture_file: reference_img.png

@@ -1,0 +1,19 @@
+dataset:
+  name: sft
+  root_dir: datasets
+  dataset_name: Phi_SfT
+  sequence_type: synthetic
+  sequence_name: S1  # S1, S2, S3, S4
+  rgb_dir: rgbs
+  sil_dir: blurred_masks
+  gt_mesh_dir: surfaces
+  render:
+    name: pytorch3d  # pytorch3d, nvdiffrast
+    camera_type: fov_perspective
+    camera_file: camera.json
+    background_color: white
+    light_position: [[0.0, 0.0, -3.0]]
+  template:
+    name: Pytorch3DTexturedMesh
+    template_file: surfaces/0000_00.obj
+    texture_file: texture.jpg

@@ -1,0 +1,94 @@
+default:
+  runner:
+    name: markov
+    n_epochs_warmup: 500
+    n_epochs_per_frame: 200
+    log_every: 100
+    seed: 7
+    device: cuda
+
+    dataset:
+      name: sft
+      root_dir: datasets
+      dataset_name: KINECT_PAPER
+      sequence_type: ""
+      sequence_name: ""
+      rgb_dir: rgbs
+      sil_dir: blurred_masks
+      mask_dir: gt_masks
+      gt_point_cloud_dir: point_clouds
+      gt_kinect_data_dir: gt_kinect_data
+      gt_aligned: false
+      trajectory_type: decoupled
+      render:
+        name: nvdiffrast  # pytorch3d, nvdiffrast
+        camera_type: perspective  # perspective, fov_perspective
+        camera_dir: other_data/camera_params
+        background_color: black  # white, black
+        image_size:
+          width: 640
+          height: 480
+        kinect: True
+      template:
+        name: UntexturedMesh
+        vertex_file: mesh.pts
+        face_file: mesh.tri
+        texture_file: reference_img.png
+
+    model:
+      name: DeformMLP
+      config_path: configs/ICCV2025/models/default_mlp.yaml
+
+    optimizer:
+      name: adamw
+      lr: !!float 1e-4
+      weight_decay: !!float 1e-2
+
+    losses:
+      - name: rgb
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      - name: sil
+        weight: !!float 1.0
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+      #    - name: mesh_inextensibility
+      #      weight: !!float 1e7
+      - name: adaptive_mesh_inextensibility
+        weight: !!float 1e1
+        hyperparams:
+          q: 0.5
+      - name: image_derivative
+        weight: !!float 1.0
+        orders: [ 1, 2 ]
+        kernel: "sobel"
+        hyperparams:
+          p: 1
+          mode: abs
+          adaptive: exp
+          alpha: !!float 10.
+          sigma: !!float 1.
+
+    metrics:
+      - name: depth_rmse
+        hyperparams:
+          scale: 1.0
+          inpaint_radius: 3
+          with_boundary: False
+        weight: 1.0
+
+local:
+  runner:
+    device: cpu
+    dataset:
+      render:
+        name: pytorch3d
