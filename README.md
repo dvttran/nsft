@@ -4,7 +4,7 @@
   <h3 align="center">ICCV 2025 </h3>
 
 [//]: # (    <h3 align="center"> <a href="#">ICCV Paper</a> &nbsp; | &nbsp; <a href="#">Project Page</a> &nbsp; | &nbsp; <a href="https://youtu.be/Jib_c_NDSkY">Supplemental Video</a> &nbsp; | &nbsp; <a href="https://arxiv.org/abs/2507.22699">arXiv</a> </h3>)
-<h3 align="center"> <a href="https://arxiv.org/abs/2507.22699">arXiv</a> &nbsp; | &nbsp; <a href="https://youtu.be/Jib_c_NDSkY">Supplemental Video</a> </h3>
+<h3 align="center"> <a href="https://arxiv.org/abs/2507.22699">arXiv</a> &nbsp; | &nbsp; <a href="https://youtu.be/Jib_c_NDSkY">Supplemental Video</a> | &nbsp; <a href="https://youtu.be/mm4hA3e9URM">Presentation</a> </h3>
   <div align="center"></div>
 </p>
 
